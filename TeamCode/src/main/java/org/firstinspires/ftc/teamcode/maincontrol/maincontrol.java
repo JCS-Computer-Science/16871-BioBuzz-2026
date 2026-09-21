@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode.maincontrol;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -64,9 +63,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic: Omni Linear OpMode", group="Linear OpMode")
-@Disabled
-public class BasicOmniOpMode_Linear extends LinearOpMode {
+@TeleOp(name="Main control", group="Linear OpMode")
+public class maincontrol extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
@@ -74,13 +72,12 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
     private DcMotor backLeftDrive = null;
     private DcMotor frontRightDrive = null;
     private DcMotor backRightDrive = null;
-    private DcMotor motorOne = null;
-    private Servo servoOne = null;
-    private Servo servoTwo = null;
+//    private DcMotor motorOne = null;
+//    private Servo servoOne = null;
+//    private Servo servoTwo = null;
 
     @Override
     public void runOpMode() {
-
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
         frontLeftDrive = hardwareMap.get(DcMotor.class, "frontLeft");
@@ -88,9 +85,9 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
         frontRightDrive = hardwareMap.get(DcMotor.class, "frontRight");
         backRightDrive = hardwareMap.get(DcMotor.class, "backRight");
         //Just temp setup for the motor and servos to be added
-        motorOne = hardwareMap.get(DcMotor.class, "motorPlaceholder");
-        servoOne = hardwareMap.get(Servo.class, "servoPlaceholder1");
-        servoTwo = hardwareMap.get(Servo.class, "servoPlaceholder2");
+//        motorOne = hardwareMap.get(DcMotor.class, "motorPlaceholder");
+//        servoOne = hardwareMap.get(Servo.class, "servoPlaceholder1");
+//        servoTwo = hardwareMap.get(Servo.class, "servoPlaceholder2");
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -119,7 +116,7 @@ public class BasicOmniOpMode_Linear extends LinearOpMode {
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
+            double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value. wait  is this because the stick is still inverted??
             double lateral =  gamepad1.left_stick_x;
             double yaw     =  gamepad1.right_stick_x;
 
