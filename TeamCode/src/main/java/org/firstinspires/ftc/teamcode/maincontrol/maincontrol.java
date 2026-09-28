@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.maincontrol;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -72,9 +73,10 @@ public class maincontrol extends LinearOpMode {
     private DcMotor backLeftDrive = null;
     private DcMotor frontRightDrive = null;
     private DcMotor backRightDrive = null;
-//    private DcMotor motorOne = null;
-//    private Servo servoOne = null;
-//    private Servo servoTwo = null;
+    private DcMotor shooter = null;
+    private Servo collectorOne = null;
+    private Servo collectorTwo = null;
+    float servo = 0;
 
     @Override
     public void runOpMode() {
@@ -84,10 +86,9 @@ public class maincontrol extends LinearOpMode {
         backLeftDrive = hardwareMap.get(DcMotor.class, "backLeft");
         frontRightDrive = hardwareMap.get(DcMotor.class, "frontRight");
         backRightDrive = hardwareMap.get(DcMotor.class, "backRight");
-        //Just temp setup for the motor and servos to be added
-//        motorOne = hardwareMap.get(DcMotor.class, "motorPlaceholder");
-//        servoOne = hardwareMap.get(Servo.class, "servoPlaceholder1");
-//        servoTwo = hardwareMap.get(Servo.class, "servoPlaceholder2");
+        shooter = hardwareMap.get(DcMotor.class, "shooter");
+        collectorOne = hardwareMap.get(Servo.class, "collector1");
+        collectorTwo = hardwareMap.get(Servo.class, "collector2");
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -103,6 +104,9 @@ public class maincontrol extends LinearOpMode {
         backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
         backRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        shooter.setDirection(DcMotor.Direction.FORWARD);
+        collectorOne.setDirection(Servo.Direction.FORWARD);
+        collectorTwo.setDirection(Servo.Direction.FORWARD);
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -133,29 +137,22 @@ public class maincontrol extends LinearOpMode {
             max = Math.max(max, Math.abs(backLeftPower));
             max = Math.max(max, Math.abs(backRightPower));
 
-            if (max > 8.0) {
+            if (max > 1.0) {
                 frontLeftPower  /= max;
                 frontRightPower /= max;
                 backLeftPower   /= max;
                 backRightPower  /= max;
             }
 
-            // This is test code:
-            //
-            // Uncomment the following code to test your motor directions.
-            // Each button should make the corresponding motor run FORWARD.
-            //   1) First get all the motors to take to correct positions on the robot
-            //      by adjusting your Robot Configuration if necessary.
-            //   2) Then make sure they run in the correct direction by modifying the
-            //      the setDirection() calls above.
-            // Once the correct motors move in the correct direction re-comment this code.
 
-            /*
-            frontLeftPower  = gamepad1.x ? 1.0 : 0.0;  // X gamepad
-            backLeftPower   = gamepad1.a ? 1.0 : 0.0;  // A gamepad
-            frontRightPower = gamepad1.y ? 1.0 : 0.0;  // Y gamepad
-            backRightPower  = gamepad1.b ? 1.0 : 0.0;  // B gamepad
-            */
+            if (gamepad1.a) {
+                collectorOne.setPosition(1);
+                collectorTwo.setPosition(1);
+            }
+
+            if (gamepad1.b) {
+                shooter.setPower(1);
+            }
 
             // Send calculated power to wheels
             frontLeftDrive.setPower(frontLeftPower);
@@ -167,6 +164,8 @@ public class maincontrol extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower, frontRightPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower, backRightPower);
+            telemetry.addData("Shooter is on?", gamepad1.b);
+            telemetry.addData("Collectors are on?", gamepad1.a);
             telemetry.update();
         }
     }}
