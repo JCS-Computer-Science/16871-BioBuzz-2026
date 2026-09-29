@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.maincontrol;
 
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -76,6 +77,7 @@ public class maincontrol extends LinearOpMode {
     private DcMotor shooter = null;
     private Servo collectorOne = null;
     private Servo collectorTwo = null;
+    GoBildaPinpointDriver pinpoint;
     float servo = 0;
 
     @Override
@@ -89,6 +91,8 @@ public class maincontrol extends LinearOpMode {
         shooter = hardwareMap.get(DcMotor.class, "shooter");
         collectorOne = hardwareMap.get(Servo.class, "collector1");
         collectorTwo = hardwareMap.get(Servo.class, "collector2");
+        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
+
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -164,8 +168,9 @@ public class maincontrol extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower, frontRightPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower, backRightPower);
-            telemetry.addData("Shooter is on?", gamepad1.b);
-            telemetry.addData("Collectors are on?", gamepad1.a);
+//            telemetry.addData("Shooter is on?", gamepad1.b);
+//            telemetry.addData("Collectors are on?", gamepad1.a);
+            telemetry.addData("pinpoint X position", pinpoint.getPosition());
             telemetry.update();
         }
     }}
