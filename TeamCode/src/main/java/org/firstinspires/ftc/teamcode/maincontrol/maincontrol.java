@@ -170,7 +170,7 @@ public class maincontrol extends LinearOpMode {
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower, backRightPower);
 //            telemetry.addData("Shooter is on?", gamepad1.b);
 //            telemetry.addData("Collectors are on?", gamepad1.a);
-            telemetry.addData("pinpoint X position", pinpoint.getPosition());
+            telemetry.addData("pinpoint  position", pinpoint.getPosition());
             telemetry.update();
         }
     }}
