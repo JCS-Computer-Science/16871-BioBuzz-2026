@@ -151,6 +151,6 @@ public class maincontrol extends LinearOpMode {
             telemetry.addData("pinpoint Y",follower.pose().y());
             telemetry.update();
 
-            follower.update();
+            follower.update(); 
         }
     }}
