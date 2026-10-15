@@ -54,7 +54,8 @@ public class maincontrol extends LinearOpMode {
     private Servo collectorOne = null;
     private Servo collectorTwo = null;
     private Follower follower;
-    float servo = 0;
+    private int turnOnShooter = -1;
+    private int turnOnCollector = -1;
 
     @Override
     public void runOpMode() {
@@ -101,9 +102,9 @@ public class maincontrol extends LinearOpMode {
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value. wait  is this because the stick is still inverted??
-            double lateral =  gamepad1.left_stick_x;
-            double yaw     =  gamepad1.right_stick_x;
+            double axial   = gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value. wait  is this because the stick is still inverted??
+            double lateral =  -gamepad1.left_stick_x;
+            double yaw     =  -gamepad1.right_stick_x;
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
@@ -125,15 +126,29 @@ public class maincontrol extends LinearOpMode {
                 backRightPower  /= max;
             }
 
-
-            if (gamepad1.a) {
+            //collectors
+            if (gamepad1.aWasPressed()) {
+                turnOnCollector *= -1;
+            }
+            if (turnOnCollector == 1) {
                 collectorOne.setPosition(1);
                 collectorTwo.setPosition(1);
+            } else if (turnOnCollector == -1) {
+                collectorOne.setPosition(0.5);
+                collectorTwo.setPosition(0.5);
             }
 
-            if (gamepad1.b) {
-                shooter.setPower(1);
+            //shooter
+            if (gamepad1.bWasPressed()) {
+                turnOnShooter *= -1;
             }
+            if (turnOnShooter == 1) {
+                shooter.setPower(0.5);
+            } else if (turnOnShooter == -1) {
+                shooter.setPower(0);
+            }
+
+
 
             // Send calculated power to wheels
             frontLeftDrive.setPower(frontLeftPower);
@@ -145,8 +160,8 @@ public class maincontrol extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftPower, frontRightPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftPower, backRightPower);
-//            telemetry.addData("Shooter is on?", gamepad1.b);
-//            telemetry.addData("Collectors are on?", gamepad1.a);
+            telemetry.addData("Shooter is on?", turnOnShooter);
+            telemetry.addData("Collectors are on?", turnOnCollector);
             telemetry.addData("pinpoint X",follower.pose().x());
             telemetry.addData("pinpoint Y",follower.pose().y());
             telemetry.update();
