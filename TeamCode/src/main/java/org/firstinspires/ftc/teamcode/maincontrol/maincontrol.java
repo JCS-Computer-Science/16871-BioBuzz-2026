@@ -56,6 +56,8 @@ public class maincontrol extends LinearOpMode {
     private Follower follower;
     private int turnOnShooter = -1;
     private int turnOnCollector = -1;
+    private DcMotor shooterTwo = null;
+    private float motorPower = 0.0F;
 
     @Override
     public void runOpMode() {
@@ -66,9 +68,10 @@ public class maincontrol extends LinearOpMode {
         frontRightDrive = hardwareMap.get(DcMotor.class, "frontRight");
         backRightDrive = hardwareMap.get(DcMotor.class, "backRight");
         shooter = hardwareMap.get(DcMotor.class, "shooter");
+        shooterTwo = hardwareMap.get(DcMotor.class, "shooter2");
         collectorOne = hardwareMap.get(Servo.class, "collector1");
         collectorTwo = hardwareMap.get(Servo.class, "collector2");
-        follower= Constants.create(hardwareMap);
+        follower = Constants.create(hardwareMap);
 
 
 
@@ -87,6 +90,7 @@ public class maincontrol extends LinearOpMode {
         frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
         backRightDrive.setDirection(DcMotor.Direction.FORWARD);
         shooter.setDirection(DcMotor.Direction.FORWARD);
+        shooterTwo.setDirection(DcMotor.Direction.REVERSE);
         collectorOne.setDirection(Servo.Direction.FORWARD);
         collectorTwo.setDirection(Servo.Direction.FORWARD);
 
@@ -143,12 +147,24 @@ public class maincontrol extends LinearOpMode {
                 turnOnShooter *= -1;
             }
             if (turnOnShooter == 1) {
-                shooter.setPower(0.5);
+                shooter.setPower(motorPower);
+                shooterTwo.setPower(motorPower);
             } else if (turnOnShooter == -1) {
                 shooter.setPower(0);
+                shooterTwo.setPower(0);
             }
 
+            if (gamepad1.dpadDownWasPressed()) {
+                motorPower -= 0.1F;
+            } else if (gamepad1.dpadUpWasPressed()) {
+                motorPower += 0.1F;
+            }
 
+            if (motorPower < 0) {
+                motorPower = 0;
+            } else if (motorPower > 1) {
+                motorPower = 1;
+            }
 
             // Send calculated power to wheels
             frontLeftDrive.setPower(frontLeftPower);
@@ -164,6 +180,7 @@ public class maincontrol extends LinearOpMode {
             telemetry.addData("Collectors are on?", turnOnCollector);
             telemetry.addData("pinpoint X",follower.pose().x());
             telemetry.addData("pinpoint Y",follower.pose().y());
+            telemetry.addData("motor power", motorPower);
             telemetry.update();
 
             follower.update(); 
