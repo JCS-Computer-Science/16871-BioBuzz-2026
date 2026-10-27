@@ -51,12 +51,13 @@ public class maincontrol extends LinearOpMode {
     private DcMotor frontRightDrive = null;
     private DcMotor backRightDrive = null;
     private DcMotor shooter = null;
+    private DcMotor shooterTwo = null;
+    private DcMotor shooterIntake = null;
     private Servo collectorOne = null;
     private Servo collectorTwo = null;
     private Follower follower;
     private int turnOnShooter = -1;
     private int turnOnCollector = -1;
-    private DcMotor shooterTwo = null;
     private float motorPower = 0.0F;
 
     @Override
@@ -69,6 +70,7 @@ public class maincontrol extends LinearOpMode {
         backRightDrive = hardwareMap.get(DcMotor.class, "backRight");
         shooter = hardwareMap.get(DcMotor.class, "shooter");
         shooterTwo = hardwareMap.get(DcMotor.class, "shooter2");
+        shooterIntake = hardwareMap.get(DcMotor.class, "shooterIntake");
         collectorOne = hardwareMap.get(Servo.class, "collector1");
         collectorTwo = hardwareMap.get(Servo.class, "collector2");
         follower = Constants.create(hardwareMap);
@@ -134,24 +136,30 @@ public class maincontrol extends LinearOpMode {
             if (gamepad1.aWasPressed()) {
                 turnOnCollector *= -1;
             }
-            if (turnOnCollector == 1) {
-                collectorOne.setPosition(1);
-                collectorTwo.setPosition(1);
-            } else if (turnOnCollector == -1) {
-                collectorOne.setPosition(0.5);
-                collectorTwo.setPosition(0.5);
+            switch (turnOnCollector) {
+                case -1:
+                    collectorOne.setPosition(1);
+                    collectorTwo.setPosition(1);
+                case 1:
+                    collectorOne.setPosition(0.5);
+                    collectorTwo.setPosition(0.5);
             }
 
             //shooter
             if (gamepad1.bWasPressed()) {
                 turnOnShooter *= -1;
             }
-            if (turnOnShooter == 1) {
-                shooter.setPower(motorPower);
-                shooterTwo.setPower(motorPower);
-            } else if (turnOnShooter == -1) {
-                shooter.setPower(0);
-                shooterTwo.setPower(0);
+            switch (turnOnShooter) {
+                case -1:
+                    shooter.setPower(0);
+                    shooterTwo.setPower(0);
+                    shooterIntake.setPower(0);
+                    break;
+                case 1:
+                    shooter.setPower(motorPower);
+                    shooterTwo.setPower(motorPower);
+                    shooterIntake.setPower(0.5);
+                    break;
             }
 
             if (gamepad1.dpadDownWasPressed()) {
