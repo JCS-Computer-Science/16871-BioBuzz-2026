@@ -55,6 +55,7 @@ public class maincontrol extends LinearOpMode {
     private DcMotor shooterIntake = null;
     private Servo collectorOne = null;
     private Servo collectorTwo = null;
+    private Servo defensiveArm = null;
     private Follower follower;
     private int turnOnShooter = -1;
     private int turnOnCollector = -1;
@@ -73,6 +74,7 @@ public class maincontrol extends LinearOpMode {
         shooterIntake = hardwareMap.get(DcMotor.class, "shooterIntake");
         collectorOne = hardwareMap.get(Servo.class, "collector1");
         collectorTwo = hardwareMap.get(Servo.class, "collector2");
+        defensiveArm = hardwareMap.get(Servo.class, "defenseArm");
         follower = Constants.create(hardwareMap);
 
 
@@ -138,11 +140,13 @@ public class maincontrol extends LinearOpMode {
             }
             switch (turnOnCollector) {
                 case -1:
-                    collectorOne.setPosition(1);
-                    collectorTwo.setPosition(1);
-                case 1:
                     collectorOne.setPosition(0.5);
                     collectorTwo.setPosition(0.5);
+                    break;
+                case 1:
+                    collectorOne.setPosition(1);
+                    collectorTwo.setPosition(1);
+                    break;
             }
 
             //shooter
@@ -174,6 +178,12 @@ public class maincontrol extends LinearOpMode {
                 motorPower = 1;
             }
 
+            if (gamepad1.dpad_right) {
+                defensiveArm.setPosition(0.4);
+            } else {
+                defensiveArm.setPosition(0.7);
+            }
+
             // Send calculated power to wheels
             frontLeftDrive.setPower(frontLeftPower);
             frontRightDrive.setPower(frontRightPower);
@@ -189,6 +199,8 @@ public class maincontrol extends LinearOpMode {
             telemetry.addData("pinpoint X",follower.pose().x());
             telemetry.addData("pinpoint Y",follower.pose().y());
             telemetry.addData("motor power", motorPower);
+            telemetry.addData("dpadleft", gamepad1.dpad_left);
+            telemetry.addData("dpadleft", gamepad1.dpad_right);
             telemetry.update();
 
             follower.update(); 
