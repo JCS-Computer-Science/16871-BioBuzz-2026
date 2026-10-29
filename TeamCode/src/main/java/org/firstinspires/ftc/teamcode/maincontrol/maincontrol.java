@@ -56,6 +56,7 @@ public class maincontrol extends LinearOpMode {
     private Servo collectorOne = null;
     private Servo collectorTwo = null;
     private Servo defensiveArm = null;
+    private Servo defensiveArmTwo = null;
     private Follower follower;
     private int turnOnShooter = -1;
     private int turnOnCollector = -1;
@@ -75,6 +76,7 @@ public class maincontrol extends LinearOpMode {
         collectorOne = hardwareMap.get(Servo.class, "collector1");
         collectorTwo = hardwareMap.get(Servo.class, "collector2");
         defensiveArm = hardwareMap.get(Servo.class, "defenseArm");
+        defensiveArmTwo = hardwareMap.get(Servo.class, "defenseArm2");
         follower = Constants.create(hardwareMap);
 
 
@@ -179,9 +181,11 @@ public class maincontrol extends LinearOpMode {
             }
 
             if (gamepad1.dpad_right) {
-                defensiveArm.setPosition(0.4);
+                defensiveArm.setPosition(0.65);
+                defensiveArmTwo.setPosition(0.35);
             } else {
-                defensiveArm.setPosition(0.7);
+                defensiveArm.setPosition(1);
+                defensiveArmTwo.setPosition(0);
             }
 
             // Send calculated power to wheels
@@ -199,8 +203,7 @@ public class maincontrol extends LinearOpMode {
             telemetry.addData("pinpoint X",follower.pose().x());
             telemetry.addData("pinpoint Y",follower.pose().y());
             telemetry.addData("motor power", motorPower);
-            telemetry.addData("dpadleft", gamepad1.dpad_left);
-            telemetry.addData("dpadleft", gamepad1.dpad_right);
+            telemetry.addData("dpadRight", gamepad1.dpad_right);
             telemetry.update();
 
             follower.update(); 
