@@ -59,6 +59,7 @@ public class maincontrol extends LinearOpMode {
     private Servo defensiveArmTwo = null;
     private Follower follower;
     private int turnOnShooter = -1;
+    private int turnOnIntake = -1;
     private int turnOnCollector = -1;
     private float motorPower = 0.0F;
 
@@ -112,9 +113,9 @@ public class maincontrol extends LinearOpMode {
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial   = gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value. wait  is this because the stick is still inverted??
+            double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value. wait  is this because the stick is still inverted??
             double lateral =  -gamepad1.left_stick_x;
-            double yaw     =  -gamepad1.right_stick_x;
+            double yaw     =  gamepad1.right_stick_x;
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
@@ -186,6 +187,18 @@ public class maincontrol extends LinearOpMode {
             } else {
                 defensiveArm.setPosition(1);
                 defensiveArmTwo.setPosition(0);
+            }
+
+            if (gamepad1.xWasPressed()) {
+                turnOnIntake *= -1;
+            }
+            switch (turnOnIntake) {
+                case -1:
+                    shooterIntake.setPower(0);
+                    break;
+                case 1:
+                    shooterIntake.setPower(0.8);
+                    break;
             }
 
             // Send calculated power to wheels
