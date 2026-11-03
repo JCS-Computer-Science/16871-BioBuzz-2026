@@ -114,8 +114,8 @@ public class maincontrol extends LinearOpMode {
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value. wait  is this because the stick is still inverted??
-            double lateral =  -gamepad1.left_stick_x;
-            double yaw     =  gamepad1.right_stick_x;
+            double lateral =  gamepad1.left_stick_x;
+            double yaw     =  -gamepad1.right_stick_x;
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
@@ -146,10 +146,19 @@ public class maincontrol extends LinearOpMode {
                     collectorOne.setPosition(0.5);
                     collectorTwo.setPosition(0.5);
                     break;
+                case 0:
+                    collectorOne.setPosition(0);
+                    collectorTwo.setPosition(0);
+                    break;
                 case 1:
                     collectorOne.setPosition(1);
                     collectorTwo.setPosition(1);
                     break;
+            }
+            if (gamepad1.right_trigger_pressed) {
+                turnOnCollector = 0;
+            } else if (gamepad1.rightTriggerWasReleased()) {
+                turnOnCollector = -1;
             }
 
             //shooter
@@ -160,12 +169,10 @@ public class maincontrol extends LinearOpMode {
                 case -1:
                     shooter.setPower(0);
                     shooterTwo.setPower(0);
-                    shooterIntake.setPower(0);
                     break;
                 case 1:
                     shooter.setPower(motorPower);
                     shooterTwo.setPower(motorPower);
-                    shooterIntake.setPower(0.5);
                     break;
             }
 
@@ -197,7 +204,7 @@ public class maincontrol extends LinearOpMode {
                     shooterIntake.setPower(0);
                     break;
                 case 1:
-                    shooterIntake.setPower(0.8);
+                    shooterIntake.setPower(1);
                     break;
             }
 
