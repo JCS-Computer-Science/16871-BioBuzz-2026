@@ -34,6 +34,7 @@ import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -50,8 +51,8 @@ public class maincontrol extends LinearOpMode {
     private DcMotor backLeftDrive = null;
     private DcMotor frontRightDrive = null;
     private DcMotor backRightDrive = null;
-    private DcMotor shooter = null;
-    private DcMotor shooterTwo = null;
+    private DcMotorEx shooter = null;
+    private DcMotorEx shooterTwo = null;
     private DcMotor shooterIntake = null;
     private Servo collectorOne = null;
     private Servo collectorTwo = null;
@@ -61,7 +62,13 @@ public class maincontrol extends LinearOpMode {
     private int turnOnShooter = -1;
     private int turnOnIntake = -1;
     private int turnOnCollector = -1;
-    private float motorPower = 0.0F;
+    private int motorPower = 0;
+
+    public int convertRpm(int rpm) {
+        int conversion;
+        conversion = (rpm * 28) / 60;
+        return conversion;
+    }
 
     @Override
     public void runOpMode() {
@@ -71,8 +78,8 @@ public class maincontrol extends LinearOpMode {
         backLeftDrive = hardwareMap.get(DcMotor.class, "backLeft");
         frontRightDrive = hardwareMap.get(DcMotor.class, "frontRight");
         backRightDrive = hardwareMap.get(DcMotor.class, "backRight");
-        shooter = hardwareMap.get(DcMotor.class, "shooter");
-        shooterTwo = hardwareMap.get(DcMotor.class, "shooter2");
+        shooter = hardwareMap.get(DcMotorEx.class, "shooter");
+        shooterTwo = hardwareMap.get(DcMotorEx.class, "shooter2");
         shooterIntake = hardwareMap.get(DcMotor.class, "shooterIntake");
         collectorOne = hardwareMap.get(Servo.class, "collector1");
         collectorTwo = hardwareMap.get(Servo.class, "collector2");
@@ -97,7 +104,9 @@ public class maincontrol extends LinearOpMode {
         frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
         backRightDrive.setDirection(DcMotor.Direction.FORWARD);
         shooter.setDirection(DcMotor.Direction.FORWARD);
+        shooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         shooterTwo.setDirection(DcMotor.Direction.REVERSE);
+        shooterTwo.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         collectorOne.setDirection(Servo.Direction.FORWARD);
         collectorTwo.setDirection(Servo.Direction.FORWARD);
 
@@ -167,25 +176,25 @@ public class maincontrol extends LinearOpMode {
             }
             switch (turnOnShooter) {
                 case -1:
-                    shooter.setPower(0);
-                    shooterTwo.setPower(0);
+                    shooter.setVelocity(0);
+                    shooterTwo.setVelocity(0);
                     break;
                 case 1:
-                    shooter.setPower(motorPower);
-                    shooterTwo.setPower(motorPower);
+                    shooter.setVelocity(convertRpm(motorPower));
+                    shooterTwo.setVelocity(convertRpm(motorPower));
                     break;
             }
 
             if (gamepad1.dpadDownWasPressed()) {
-                motorPower -= 0.1F;
+                motorPower -= 100;
             } else if (gamepad1.dpadUpWasPressed()) {
-                motorPower += 0.1F;
+                motorPower += 100;
             }
 
             if (motorPower < 0) {
                 motorPower = 0;
-            } else if (motorPower > 1) {
-                motorPower = 1;
+            } else if (motorPower > 6000) {
+                motorPower = 6000;
             }
 
             if (gamepad1.dpad_right) {
