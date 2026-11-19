@@ -29,7 +29,7 @@ public class autoMovement extends LinearOpMode {
     private Follower follower;
     private final PoseFactory poseFactory = PoseFactory.degrees();
     private final Pose start = poseFactory.of(58.6833, 7.1056, -90);
-    private final Pose path1 = poseFactory.of(83.012, 30.9912, -90);
+    private final Pose path1 = poseFactory.of(58.68, 12.21, -90);
     private final Pose point2 = poseFactory.of(28.049, 43.5338, 167.1451);
     private final Pose point3Start = poseFactory.of(28.049, 43.5338, 0);
     private final Pose point3 = poseFactory.of(8.0357, 115.9812, 0);
