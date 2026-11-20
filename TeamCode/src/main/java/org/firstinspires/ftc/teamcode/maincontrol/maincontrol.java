@@ -158,6 +158,7 @@ public class maincontrol extends LinearOpMode {
                 case 0:
                     collectorOne.setPosition(0);
                     collectorTwo.setPosition(0);
+                    shooterIntake.setPower(-1);
                     break;
                 case 1:
                     collectorOne.setPosition(1);
