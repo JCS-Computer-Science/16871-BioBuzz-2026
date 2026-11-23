@@ -13,6 +13,7 @@ import com.pedropathing.ivy.Scheduler;
 import static com.pedropathing.ivy.Scheduler.execute;
 import static com.pedropathing.ivy.Scheduler.schedule;
 import static com.pedropathing.ivy.commands.Commands.*;
+import static com.pedropathing.ivy.groups.Groups.deadline;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -32,7 +33,7 @@ public class autoMovement extends LinearOpMode {
     private final Pose path1 = poseFactory.of(58.68, 12.21, -90);
     private final Pose point2 = poseFactory.of(28.049, 43.5338, 167.1451);
     private final Pose point3Start = poseFactory.of(28.049, 43.5338, 0);
-    private final Pose point3 = poseFactory.of(8.0357, 115.9812, 0);
+    private final Pose point3 = poseFactory.of(12.69, 90.76, 0);
 
     private DcMotorEx shooter = null;
     private DcMotorEx shooterTwo = null;
@@ -58,7 +59,11 @@ public class autoMovement extends LinearOpMode {
                 instant(() -> shooterIntake.setPower(1)),
                 waitMs(5000),
                 follow(follower, path2()),
-                follow(follower, path3())
+                deadline(
+                        waitMs(3600),
+                        follow(follower, path3())
+                )
+
         );
     }
 
